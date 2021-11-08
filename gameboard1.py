@@ -20,6 +20,8 @@ playerOneTurn = True
 recurse = 0
 global p1Score
 global p2Score
+var1 = 1
+var2 = 0
 """
 def getBoardSize():
     global boardSize
@@ -33,8 +35,8 @@ def getBoardSize():
 """
 boardSize = 3
 #Add extra length to board size as easy workaround out of bounds error and doesnt appear in game board
-gameboard = [[" " for x in range (boardSize+2)] for y in range(boardSize+2)]
-
+gameboard = [[" " for x in range (boardSize)] for y in range(boardSize)]
+    
 def isBoardFull():
     isEmpty = True
     for i in gameboard:
@@ -46,6 +48,11 @@ def isBoardFull():
 ################# ---------------- Simple Game Functions ------------------------ ######################
 ################# ---------------- Simple Game Functions ------------------------ ######################
 
+class simpleGame():
+    
+    def __init__(self, game):
+        self.game = "Simple"
+        
 #called by play function to create a new playable board when needed
 def newBoardCreate(board, player1, player2):
     global buttonBoard
@@ -152,6 +159,11 @@ def markButton(board, player1, player2, i, j):
 ################################## ------ GENERAL GAME FUNCTIONS ----- ##########################################
 ################################## ------ GENERAL GAME FUNCTIONS ----- ##########################################
 ################################## ------ GENERAL GAME FUNCTIONS ----- ##########################################
+class generalGame():
+    
+    def __init__(self, game):
+        self.game = "General"
+
 def generalWinner(board, char, x, y):
     char = "S"
     altChar = "O"
@@ -202,8 +214,21 @@ def createGeneralNewGame(board):
 def markGeneralButton(board, player1, player2, i, j):
     global playerOneTurn
     global p1Score
+    p1Score = var1
     global p2Score
-    
+    p2Score = var2
+
+    if isBoardFull() == True:
+        if (p1Score > p2Score):
+            winBox = messagebox.showinfo("Winner!", "Player 1 wins!")
+        elif (p2Score > p1Score):
+            winBox = messagebox.showinfo("Winner!", "Player 2 wins!")
+        elif (p1Score == p2Score):
+            winBox = messagebox.showinfo("Draw!", "Draw!")
+            mainMenu()
+        else:
+            print("Draw game!")
+
     if gameboard[i][j] == ' ':
         if playerOneTurn == True:
             gameboard[i][j] = "S"
@@ -214,22 +239,15 @@ def markGeneralButton(board, player1, player2, i, j):
 
         buttonBoard[i][j].config(text=gameboard[i][j])
 
-   #Player 1 "S" wins:
+   #Player 1 "S" score:
     if simpleWinner(gameboard, i, j) == True and (playerOneTurn == False):
         p1Score += 1
 
-    #Player 2 "O" wins:
+    #Player 2 "O" score:
     if simpleWinner(gameboard, i , j) == True and (playerOneTurn == True):
         p2Score += 1
     
-    if isBoardFull == True:
-        if (p1Score > p2Score):
-            winBox = messagebox.showinfo("Winner!", "Player 1 wins!")
-        elif (p2Score > p1Score):
-            winBox = messagebox.showinfo("Winner!", "Player 2 wins!")
-        elif (p1Score == p2Score):
-            winBox = messagebox.showinfo("Draw!", "Draw!")
-            mainMenu()
+
 
 def mainMenu():
     menu = Tk()
@@ -280,11 +298,3 @@ gameMenu = mainMenu()
 ####### ---------------------------- TESTING --------------------------------- #######
 ####### ---------------------------- TESTING --------------------------------- #######
 # Now in separate file "gameTest.py"
-
-
-
-
-
-
-
-    
